@@ -36,7 +36,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Projects'),
+          backgroundColor: Colors.orange,
+          title: Text(
+            'Modules',
+            style: TextStyle(
+              fontSize: 20.0, // Adjust the font size
+              fontWeight: FontWeight.bold, // Bold font weight
+            ),
+          ),
         ),
         body: FutureBuilder<Map<String, dynamic>>(
           future: fetchProjects(),
@@ -70,7 +77,7 @@ class MyApp extends StatelessWidget {
                               child: Text(
                                 'Project Name: ${project['name']}',
                                 style: TextStyle(fontWeight: FontWeight.bold),
-                           ),
+                              ),
                             ),
                             ListView.builder(
                               shrinkWrap: true,
@@ -91,11 +98,11 @@ class MyApp extends StatelessWidget {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                       builder: (context) => TasksPage(
+                                        builder: (context) => TasksPage(
                                           moduleId: module['_id'],
-                                        
+                                          moduleName: module['module_name'],
+                                        ),
                                       ),
-                                    ),
                                     );
                                   },
                                 );

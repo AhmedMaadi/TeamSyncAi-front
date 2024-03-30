@@ -20,6 +20,7 @@ class TaskDetailsPage extends StatefulWidget {
 
 class _TaskDetailsPageState extends State<TaskDetailsPage> {
   late List<String> steps;
+  bool isLoading = true; // Track loading state
 
   @override
   void initState() {
@@ -40,10 +41,12 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
         if (stepsData is List<dynamic>) {
           setState(() {
             steps = stepsData.cast<String>().toList();
+            isLoading = false; // Update loading state when data is fetched
           });
         } else if (stepsData is String) {
           setState(() {
             steps = [stepsData];
+            isLoading = false; // Update loading state when data is fetched
           });
         } else {
           print('Invalid steps data format');
@@ -68,152 +71,174 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Task Details'),
-        backgroundColor: const Color(0xFFE89F16),
+        title: Text(
+          'Task Details',
+          style: TextStyle(
+            fontSize: 20.0, // Adjust the font size
+            fontWeight: FontWeight.bold, // Bold font weight
+          ),
+        ),
+        backgroundColor: Colors.orange,
       ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                widget.task.taskDescription,
-                style: const TextStyle(
-                  fontSize: 15,
-                  color: Colors.black87,
-                ),
-              ),
-              const SizedBox(
-                height: 20.0,
-              ),
-              const Divider(
-                color: Colors.grey,
-                thickness: 1,
-                height: 20,
-              ),
-              const SizedBox(height: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Due:',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  Row(
+          child: isLoading
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      CircularProgressIndicator(),
+                      SizedBox(height: 20),
                       Text(
-                        DateFormat('EEEE, h:mm a').format(widget.task.date),
-                        style: const TextStyle(
-                          fontSize: 35,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 233, 142, 5),
-                        ),
+                        'Loading data for steps...',
+                        style: TextStyle(fontSize: 16),
                       ),
-                      const SizedBox(width: 5),
                     ],
                   ),
-                ],
-              ),
-              const SizedBox(height: 30),
-              const Text(
-                'Team Members:',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 10),
-              ListView.builder(
-                shrinkWrap: true,
-                itemCount: widget.task.members.length,
-                itemBuilder: (context, index) {
-                  final member = widget.task.members[index];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Material(
-                      elevation: 4,
-                      borderRadius: BorderRadius.circular(10.0),
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10.0),
-                            topRight: Radius.circular(10.0),
+                ) // Show loading indicator if data is loading
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.task.taskDescription,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    const Divider(
+                      color: Colors.grey,
+                      thickness: 1,
+                      height: 20,
+                    ),
+                    const SizedBox(height: 20),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Due:',
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
                           ),
                         ),
-                        child: Row(
+                        const SizedBox(height: 5),
+                        Row(
                           children: [
-                            CircleAvatar(
-                              radius: 30,
-                              backgroundImage:
-                                  AssetImage(member.profileImagePath[0]),
+                            Text(
+                              DateFormat('EEEE, h:mm a')
+                                  .format(widget.task.date),
+                              style: const TextStyle(
+                                fontSize: 35,
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 233, 142, 5),
+                              ),
                             ),
-                            const SizedBox(width: 8),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  member.name,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(member.email),
-                              ],
-                            ),
+                            const SizedBox(width: 5),
                           ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 30),
+                    const Text(
+                      'Team Members:',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: widget.task.members.length,
+                      itemBuilder: (context, index) {
+                        final member = widget.task.members[index];
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Material(
+                            elevation: 4,
+                            borderRadius: BorderRadius.circular(10.0),
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(10.0),
+                                  topRight: Radius.circular(10.0),
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 30,
+                                    backgroundImage:
+                                        AssetImage(member.profileImagePath[0]),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        member.name,
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(member.email),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    if (steps.isNotEmpty) ...[
+                      const SizedBox(height: 20),
+                      const Text(
+                        'Steps:',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      for (final step in steps)
+                        Text(
+                          step,
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                    ],
+                    const SizedBox(height: 20),
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // Mark task as completed
+                          widget.markAsCompleted(widget.task);
+                          // Show completion message
+                          _showCompletionMessage(context);
+                          // Navigate back
+                          Navigator.pop(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.orange,
+                            fixedSize: const Size(300.0, 50.0)),
+                        child: const Text(
+                          'Mark as Completed',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 17.0,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
-                  );
-                },
-              ),
-              if (steps.isNotEmpty) ...[
-                const SizedBox(height: 20),
-                const Text(
-                  'Steps:',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  ],
                 ),
-                const SizedBox(height: 10),
-                for (final step in steps)
-                  Text(
-                    step,
-                    style: const TextStyle(fontSize: 16),
-                  ),
-              ],
-              const SizedBox(height: 20),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Mark task as completed
-                    widget.markAsCompleted(widget.task);
-                    // Show completion message
-                    _showCompletionMessage(context);
-                    // Navigate back
-                    Navigator.pop(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepPurple,
-                      fixedSize: const Size(300.0, 50.0)),
-                  child: const Text(
-                    'Mark as Completed',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 17.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );

@@ -34,11 +34,10 @@ class Member {
 
 class TasksPage extends StatefulWidget {
   final String moduleId;
+  final String moduleName;
 
-  const TasksPage({
-    Key? key,
-    required this.moduleId,
-  }) : super(key: key);
+  const TasksPage({Key? key, required this.moduleId, required this.moduleName})
+      : super(key: key);
 
   @override
   _TasksPageState createState() => _TasksPageState();
@@ -213,7 +212,14 @@ class _TasksPageState extends State<TasksPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tasks for Module ${widget.moduleId}'),
+        backgroundColor: Colors.orange, // Background color of the app bar
+        title: Text(
+          'Tasks for Module ${widget.moduleName}',
+          style: TextStyle(
+            fontSize: 17.0, // Adjust the font size
+            fontWeight: FontWeight.bold, // Bold font weight
+          ),
+        ),
       ),
       body: Column(
         children: [
@@ -225,12 +231,12 @@ class _TasksPageState extends State<TasksPage> {
                 style: TextButton.styleFrom(
                   padding: EdgeInsets.zero,
                   backgroundColor:
-                      _showTodayTasks ? Colors.blue : Colors.transparent,
+                      _showTodayTasks ? Colors.orange : Colors.transparent,
                 ),
                 child: Text(
                   'Today',
                   style: TextStyle(
-                    color: _showTodayTasks ? Colors.white : Colors.blue,
+                    color: _showTodayTasks ? Colors.white : Colors.orange,
                   ),
                 ),
               ),
@@ -240,7 +246,7 @@ class _TasksPageState extends State<TasksPage> {
                 style: TextButton.styleFrom(
                   padding: EdgeInsets.zero,
                   backgroundColor: !_showTodayTasks && !_showCompletedTasks
-                      ? Colors.blue
+                      ? Colors.orange
                       : Colors.transparent,
                 ),
                 child: Text(
@@ -248,7 +254,7 @@ class _TasksPageState extends State<TasksPage> {
                   style: TextStyle(
                     color: !_showTodayTasks && !_showCompletedTasks
                         ? Colors.white
-                        : Colors.blue,
+                        : Colors.orange,
                   ),
                 ),
               ),
@@ -258,12 +264,12 @@ class _TasksPageState extends State<TasksPage> {
                 style: TextButton.styleFrom(
                   padding: EdgeInsets.zero,
                   backgroundColor:
-                      _showCompletedTasks ? Colors.blue : Colors.transparent,
+                      _showCompletedTasks ? Colors.orange : Colors.transparent,
                 ),
                 child: Text(
                   'Completed',
                   style: TextStyle(
-                    color: _showCompletedTasks ? Colors.white : Colors.blue,
+                    color: _showCompletedTasks ? Colors.white : Colors.orange,
                   ),
                 ),
               ),
